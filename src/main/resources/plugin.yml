@@ -1,0 +1,5 @@
+name: BungeeScale
+version: {version}
+author: SkeletonEye
+
+main: de.skeletoneye.bungee.scale.BungeeScale
