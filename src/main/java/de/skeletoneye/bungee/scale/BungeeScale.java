@@ -14,9 +14,13 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
+@Getter
 public class BungeeScale extends Plugin
 {
     private static @Getter BungeeScale instance;
+
+    private Configuration networkConfig;
+    private Path runtimeDir;
 
     // TODO To be moved somewhere else
     public Configuration checkConfig(Path path) throws IOException
@@ -41,7 +45,7 @@ public class BungeeScale extends Plugin
             Files.createDirectories(serversDir);
 
             // Check whether configuration file exists and read it
-            final Configuration networkCfg = this.checkConfig(serversDir.resolve("network.yml"));
+            this.networkConfig = this.checkConfig(serversDir.resolve("network.yml"));
 
             // Check whether other required directories exist
             final Path staticDir = serversDir.resolve("static");
@@ -54,14 +58,14 @@ public class BungeeScale extends Plugin
             Files.createDirectories(includesDir);
 
             // Make sure runtime/ is existing and empty
-            final Path runtimeDir = serversDir.resolve("runtime");
+            this.runtimeDir = serversDir.resolve("runtime");
 
-            if (Files.exists(runtimeDir)) {
+            if (Files.exists(this.runtimeDir)) {
                 this.getLogger().info("Clearing runtime directory");
-                FileUtils.deleteDirectory(runtimeDir.toFile());
+                FileUtils.deleteDirectory(this.runtimeDir.toFile());
             }
 
-            Files.createDirectory(runtimeDir);
+            Files.createDirectory(this.runtimeDir);
 
             // Singleton
             BungeeScale.instance = this;
