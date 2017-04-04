@@ -57,6 +57,14 @@ public class BungeeScale extends Plugin
             final Path includesDir = serversDir.resolve("includes");
             Files.createDirectories(includesDir);
 
+            // Check whether driver.jar exists
+            final Path driverJar = imagesDir.resolve("driver.jar");
+
+            if (!Files.exists(driverJar)) {
+                this.getLogger().severe("Unable to find " + driverJar.toString() + ", not going to start.");
+                return;
+            }
+
             // Make sure runtime/ is existing and empty
             this.runtimeDir = serversDir.resolve("runtime");
 
