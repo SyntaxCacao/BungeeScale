@@ -1,0 +1,10 @@
+# Version number of this file. Do never modify.
+version: 1
+
+# Command to be used when starting a new instance.
+# {driver} will be replaced with the location of the driver
+# {port} will be replaced by the unique id of the new instance
+launchCommand: 'java -jar {driver} --port {port}'
+
+# List of includes to be applied to all images.
+includes: []

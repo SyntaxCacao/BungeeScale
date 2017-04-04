@@ -1,0 +1,20 @@
+# Version number of this file. Do never modify.
+version: 1
+
+# Short name for this image to be displayed everywhere (e.g. 'SG' for 'Survival Games').
+# Do only use alphanumeric characters.
+name: XY
+
+# If set to false, the image will be ignored (i.e. it won't be loaded).
+enabled: false
+
+# List of includes to be applied to this image.
+includes: []
+
+instances:
+  # Highest number of instances running at the same time for this image.
+  # Use -1 for an unlimited number of instances
+  max: -1
+
+  # Number of instances to be started immediately after the proxy has booted.
+  startup: 1
