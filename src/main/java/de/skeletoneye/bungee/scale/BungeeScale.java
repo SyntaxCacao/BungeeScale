@@ -38,20 +38,20 @@ public class BungeeScale extends Plugin
         try {
             // Check whether servers directory exists
             final Path serversDir = Paths.get("servers");
-            Files.createDirectory(serversDir);
+            Files.createDirectories(serversDir);
 
             // Check whether configuration file exists and read it
             final Configuration networkCfg = this.checkConfig(serversDir.resolve("network.yml"));
 
             // Check whether other required directories exist
             final Path staticDir = serversDir.resolve("static");
-            Files.createDirectory(staticDir);
+            Files.createDirectories(staticDir);
 
             final Path imagesDir = serversDir.resolve("images");
-            Files.createDirectory(imagesDir);
+            Files.createDirectories(imagesDir);
 
             final Path includesDir = serversDir.resolve("includes");
-            Files.createDirectory(includesDir);
+            Files.createDirectories(includesDir);
 
             // Make sure runtime/ is existing and empty
             final Path runtimeDir = serversDir.resolve("runtime");
