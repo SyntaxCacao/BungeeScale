@@ -21,6 +21,7 @@ public class BungeeScale extends Plugin
 {
     private static @Getter BungeeScale instance;
 
+    private Path includesDir;
     private Configuration networkConfig;
     private Path runtimeDir;
 
@@ -56,8 +57,8 @@ public class BungeeScale extends Plugin
             final Path imagesDir = serversDir.resolve("images");
             Files.createDirectories(imagesDir);
 
-            final Path includesDir = serversDir.resolve("includes");
-            Files.createDirectories(includesDir);
+            this.includesDir = serversDir.resolve("includes");
+            Files.createDirectories(this.includesDir);
 
             // Check whether driver.jar exists
             final Path driverJar = imagesDir.resolve("driver.jar");

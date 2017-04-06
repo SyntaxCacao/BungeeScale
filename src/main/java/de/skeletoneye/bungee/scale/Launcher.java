@@ -3,6 +3,8 @@ package de.skeletoneye.bungee.scale;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +39,22 @@ public class Launcher implements Runnable
 
             // Create runtime directory
             BungeeScale.getInstance().getLogger().info("Launching " + this.getIdentifier() + " on port " + port);
-            FileUtils.copyDirectory(this.getImage().getSourceDir().toFile(), BungeeScale.getInstance().getRuntimeDir().resolve(identifier).toFile());
+
+            Path runtimeDir = BungeeScale.getInstance().getRuntimeDir().resolve(identifier);
+            FileUtils.copyDirectory(this.getImage().getSourceDir().toFile(), runtimeDir.toFile());
+
+            List<String> includes = BungeeScale.getInstance().getNetworkConfig().getStringList("includes");
+            includes.addAll(this.getImage().getConfig().getStringList("includes"));
+
+            for (String include : includes) {
+                Path includeDir = BungeeScale.getInstance().getIncludesDir().resolve(include);
+
+                if (Files.exists(includeDir)) {
+                    FileUtils.copyDirectory(includeDir.toFile(), runtimeDir.toFile());
+                } else {
+                    BungeeScale.getInstance().getLogger().severe("Unable to find include " + include + ", skipping it.");
+                }
+            }
 
             // Create and register ServerInfo object
             ServerInfo info = ProxyServer.getInstance().constructServerInfo(this.getIdentifier(), new InetSocketAddress("0.0.0.0", port), this.getIdentifier(), false);
