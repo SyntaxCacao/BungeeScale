@@ -2,9 +2,11 @@ package de.skeletoneye.bungee.scale;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 
@@ -77,6 +79,28 @@ public class BungeeScale extends Plugin
 
             // Singleton
             BungeeScale.instance = this;
+
+            // Load all images from their directory
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(imagesDir)) {
+                for (Path item : stream) {
+                    if (!Files.isDirectory(item)) {
+                        continue;
+                    }
+
+                    Image.load(item);
+                }
+            }
+
+            // Launch instances according to configuration
+            Map<String, Image> images = Image.getAll();
+
+            for (String key : images.keySet()) {
+                int instances = images.get(key).getConfig().getInt("instances.startup");
+
+                for (int i = 0; i < instances; i++) {
+                    images.get(key).launchInstance();
+                }
+            }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
