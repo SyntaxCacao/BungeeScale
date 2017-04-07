@@ -99,7 +99,7 @@ public class BungeeScale extends Plugin
                 int instances = images.get(key).getConfig().getInt("instances.startup");
 
                 for (int i = 0; i < instances; i++) {
-                    images.get(key).launchInstance();
+                    images.get(key).launchInstance(true);
                 }
             }
         } catch (Exception exception) {

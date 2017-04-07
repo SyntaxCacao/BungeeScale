@@ -5,7 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,6 +48,11 @@ public class Image
 
     public void launchInstance() throws IOException
     {
+        this.launchInstance(false);
+    }
+
+    public void launchInstance(boolean delayed) throws IOException
+    {
         // Generate identifier
         String identifier;
 
@@ -53,6 +60,10 @@ public class Image
             identifier = this.getConfig().getString("name") + "-" + UUID.randomUUID().toString().substring(0, 7);
         } while (Files.exists(BungeeScale.getInstance().getRuntimeDir().resolve(identifier)));
 
-        ProxyServer.getInstance().getScheduler().runAsync(BungeeScale.getInstance(), new Launcher(this, identifier));
+        if (delayed) {
+            ProxyServer.getInstance().getScheduler().schedule(BungeeScale.getInstance(), new Launcher(this, identifier), 1 + new Random().nextInt(5), TimeUnit.SECONDS);
+        } else {
+            ProxyServer.getInstance().getScheduler().runAsync(BungeeScale.getInstance(), new Launcher(this, identifier));
+        }
     }
 }
