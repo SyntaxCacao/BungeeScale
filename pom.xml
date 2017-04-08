@@ -101,17 +101,17 @@
               <version>${project.version}</version>
               <type>${project.packaging}</type>
               <classifier>jar-with-dependencies</classifier>
-              <destFileName>bungeescale.jar</destFileName>
+              <destFileName>${project.artifactId}.jar</destFileName>
             </artifactItem>
           </artifactItems>
           <outputDirectory>test-server/plugins</outputDirectory>
         </configuration>
       </plugin>
-      <!-- maven-replacer-plugin -->
+      <!-- replacer-plugin -->
       <plugin>
         <groupId>com.google.code.maven-replacer-plugin</groupId>
-        <artifactId>maven-replacer-plugin</artifactId>
-        <version>1.4.1</version>
+        <artifactId>replacer</artifactId>
+        <version>1.5.3</version>
         <executions>
           <execution>
             <phase>prepare-package</phase>
