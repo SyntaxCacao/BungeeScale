@@ -1,5 +1,6 @@
 package de.skeletoneye.bungee.scale;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,6 +25,19 @@ public class Launcher implements Runnable
     private Image image;
     private ServerInfo server;
 
+    private void applyIncludes(File runtimeDir, List<String> includes) throws IOException
+    {
+        for (String include : includes) {
+            Path includeDir = BungeeScale.getInstance().getIncludesDir().resolve(include);
+
+            if (Files.exists(includeDir)) {
+                FileUtils.copyDirectory(includeDir.toFile(), runtimeDir);
+            } else {
+                BungeeScale.getInstance().getLogger().severe("Unable to find include " + include + ", skipping it.");
+            }
+        }
+    }
+
     @Override
     public void run()
     {
@@ -32,20 +46,16 @@ public class Launcher implements Runnable
             BungeeScale.getInstance().getLogger().info("Launching " + this.getServer().getName() + " on port " + this.getServer().getAddress().getPort());
 
             Path runtimeDir = BungeeScale.getInstance().getRuntimeDir().resolve(this.getServer().getName());
+            Files.createDirectory(runtimeDir);
+
+            // Apply global includes
+            this.applyIncludes(runtimeDir.toFile(), BungeeScale.getInstance().getNetworkConfig().getStringList("includes"));
+
+            // Copy image files to runtime directory
             FileUtils.copyDirectory(this.getImage().getSourceDir().toFile(), runtimeDir.toFile());
 
-            List<String> includes = BungeeScale.getInstance().getNetworkConfig().getStringList("includes");
-            includes.addAll(this.getImage().getConfig().getStringList("includes"));
-
-            for (String include : includes) {
-                Path includeDir = BungeeScale.getInstance().getIncludesDir().resolve(include);
-
-                if (Files.exists(includeDir)) {
-                    FileUtils.copyDirectory(includeDir.toFile(), runtimeDir.toFile());
-                } else {
-                    BungeeScale.getInstance().getLogger().severe("Unable to find include " + include + ", skipping it.");
-                }
-            }
+            // Apply image-specific includes
+            this.applyIncludes(runtimeDir.toFile(), this.getImage().getConfig().getStringList("includes"));
 
             // Call ServerLaunchEvent
             ServerLaunchEvent launchEvent = new ServerLaunchEvent(this.getServer(), this.getImage());
