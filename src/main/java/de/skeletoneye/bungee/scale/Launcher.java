@@ -1,8 +1,6 @@
 package de.skeletoneye.bungee.scale;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -24,23 +22,16 @@ import net.md_5.bungee.api.config.ServerInfo;
 public class Launcher implements Runnable
 {
     private Image image;
-    private String identifier;
+    private ServerInfo server;
 
     @Override
     public void run()
     {
         try {
-            // Search empty port
-            int port = 0;
-
-            try (ServerSocket socket = new ServerSocket(0)) {
-                port = socket.getLocalPort();
-            }
-
             // Create runtime directory
-            BungeeScale.getInstance().getLogger().info("Launching " + this.getIdentifier() + " on port " + port);
+            BungeeScale.getInstance().getLogger().info("Launching " + this.getServer().getName() + " on port " + this.getServer().getAddress().getPort());
 
-            Path runtimeDir = BungeeScale.getInstance().getRuntimeDir().resolve(identifier);
+            Path runtimeDir = BungeeScale.getInstance().getRuntimeDir().resolve(this.getServer().getName());
             FileUtils.copyDirectory(this.getImage().getSourceDir().toFile(), runtimeDir.toFile());
 
             List<String> includes = BungeeScale.getInstance().getNetworkConfig().getStringList("includes");
@@ -56,19 +47,15 @@ public class Launcher implements Runnable
                 }
             }
 
-            // Create and register ServerInfo object
-            ServerInfo info = ProxyServer.getInstance().constructServerInfo(this.getIdentifier(), new InetSocketAddress("0.0.0.0", port), this.getIdentifier(), false);
-            ProxyServer.getInstance().getServers().put(this.getIdentifier(), info);
-
             // Call ServerLaunchEvent
-            ServerLaunchEvent launchEvent = new ServerLaunchEvent(info, this.getImage());
+            ServerLaunchEvent launchEvent = new ServerLaunchEvent(this.getServer(), this.getImage());
             launchEvent = ProxyServer.getInstance().getPluginManager().callEvent(launchEvent);
 
             // Prepare launch command
             String command = BungeeScale.getInstance().getNetworkConfig().getString("launchCommand");
             command = command.replaceAll("\\{driver\\}", "../../images/driver.jar");
-            command = command.replaceAll("\\{identifier\\}", this.getIdentifier());
-            command = command.replaceAll("\\{port\\}", String.valueOf(port));
+            command = command.replaceAll("\\{identifier\\}", this.getServer().getName());
+            command = command.replaceAll("\\{port\\}", String.valueOf(this.getServer().getAddress().getPort()));
 
             // Add arguments given from ServerLaunchEvent
             List<String> input = new ArrayList<>();
@@ -77,27 +64,27 @@ public class Launcher implements Runnable
 
             // Builder and start process
             ProcessBuilder builder = new ProcessBuilder(input.toArray(new String[] {}));
-            builder.directory(BungeeScale.getInstance().getRuntimeDir().resolve(identifier).toFile());
+            builder.directory(runtimeDir.toFile());
             Process process = builder.start();
 
             try {
                 // Wait for process to terminate
                 process.waitFor();
-                BungeeScale.getInstance().getLogger().info(this.getIdentifier() + " has terminated.");
+                BungeeScale.getInstance().getLogger().info(this.getServer().getName() + " has terminated.");
 
                 // Call ServerTerminatedEvent
-                ProxyServer.getInstance().getPluginManager().callEvent(new ServerTerminatedEvent(info));
+                ProxyServer.getInstance().getPluginManager().callEvent(new ServerTerminatedEvent(this.getServer()));
 
                 // Unregister ServerInfo object
-                ProxyServer.getInstance().getServers().remove(info.getName());
+                ProxyServer.getInstance().getServers().remove(this.getServer().getName());
             } catch (InterruptedException exception) {
                 // Getting a InterruptedException while running Process#waitFor means BungeeCord is going to shut down
                 // and the server has not terminated yet
-                BungeeScale.getInstance().getLogger().severe("Destroying " + this.getIdentifier());
+                BungeeScale.getInstance().getLogger().severe("Destroying " + this.getServer().getName());
                 process.destroy();
             }
         } catch (IOException exception) {
-            BungeeScale.getInstance().getLogger().severe("Exception while launching " + this.getIdentifier());
+            BungeeScale.getInstance().getLogger().severe("Exception while launching " + this.getServer().getName());
             exception.printStackTrace();
         }
     }
