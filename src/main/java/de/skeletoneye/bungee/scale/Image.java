@@ -49,13 +49,56 @@ public class Image
     private Configuration config;
     private Path sourceDir;
 
-    public void launchInstance() throws IOException
+    /**
+     * Counts all instances of this image registered to the proxy.
+     * 
+     * @return int
+     */
+    public int countRegisteredInstances()
     {
-        this.launchInstance(false);
+        int instances = 0;
+
+        for (String server : ProxyServer.getInstance().getServers().keySet()) {
+            if (server.startsWith(this.getConfig().getString("name") + "-")) {
+                instances++;
+            }
+        }
+
+        return instances;
     }
 
-    public void launchInstance(boolean delayed) throws IOException
+    /**
+     * Checks whether the maximum number of running instances (according to the image's configuration) is reached.
+     * 
+     * @return boolean
+     */
+    public boolean isMaximumReached()
     {
+        int max = this.getConfig().getInt("instances.max", -1);
+        return (max >= 0 && max <= this.countRegisteredInstances());
+    }
+
+    public boolean launchInstance() throws IOException
+    {
+        return this.launchInstance(false, false);
+    }
+
+    public boolean launchInstance(boolean delayed) throws IOException
+    {
+        return this.launchInstance(false, false);
+    }
+
+    public boolean launchInstance(boolean delayed, boolean force) throws IOException
+    {
+        if (this.isMaximumReached()) {
+            if (force) {
+                BungeeScale.getInstance().getLogger().severe("Forcefully launching a new instance of " + this.getConfig().getString("name") + ", even though the maximum number of running instances is reached.");
+            } else {
+                BungeeScale.getInstance().getLogger().severe("Unable to launch another instance of " + this.getConfig().getString("name") + ", since the maximum number of running instances is reached.");
+                return false;
+            }
+        }
+
         // Generate identifier
         String identifier;
 
@@ -79,5 +122,7 @@ public class Image
         } else {
             ProxyServer.getInstance().getScheduler().runAsync(BungeeScale.getInstance(), new Launcher(this, info));
         }
+
+        return true;
     }
 }

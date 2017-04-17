@@ -72,7 +72,7 @@ public class Launcher implements Runnable
             input.addAll(Arrays.asList(command.split(" ")));
             input.addAll(launchEvent.getArguments());
 
-            // Builder and start process
+            // Build and start process
             ProcessBuilder builder = new ProcessBuilder(input.toArray(new String[] {}));
             builder.directory(runtimeDir.toFile());
             Process process = builder.start();
