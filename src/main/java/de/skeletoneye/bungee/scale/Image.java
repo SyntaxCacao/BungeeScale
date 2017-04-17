@@ -85,7 +85,7 @@ public class Image
 
     public boolean launchInstance(boolean delayed) throws IOException
     {
-        return this.launchInstance(false, false);
+        return this.launchInstance(delayed, false);
     }
 
     public boolean launchInstance(boolean delayed, boolean force) throws IOException
