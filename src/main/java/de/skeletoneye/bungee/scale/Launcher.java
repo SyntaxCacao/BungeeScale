@@ -61,6 +61,12 @@ public class Launcher implements Runnable
             ServerLaunchEvent launchEvent = new ServerLaunchEvent(this.getServer(), this.getImage());
             launchEvent = ProxyServer.getInstance().getPluginManager().callEvent(launchEvent);
 
+            if (launchEvent.isCancelled()) {
+                BungeeScale.getInstance().getLogger().info("Launch process for " + this.getServer().getName() + " cancelled.");
+                FileUtils.deleteDirectory(runtimeDir.toFile());
+                return;
+            }
+
             // Prepare launch command
             String command = BungeeScale.getInstance().getNetworkConfig().getString("launchCommand");
             command = command.replaceAll("\\{driver\\}", "../../images/driver.jar");
