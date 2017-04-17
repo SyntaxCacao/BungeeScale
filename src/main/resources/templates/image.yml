@@ -18,3 +18,10 @@ instances:
 
   # Number of instances to be started immediately after the proxy has booted.
   startup: 1
+
+restart:
+  # If enabled, a new instance will be launched whenever an instance terminates.
+  enabled: true
+
+  # If set to true, a new instance will be launched even if the maximum number of running instances is reached.
+  forced: false

@@ -93,6 +93,11 @@ public class Launcher implements Runnable
 
                 // Unregister ServerInfo object
                 ProxyServer.getInstance().getServers().remove(this.getServer().getName());
+
+                // Launch another instance if required
+                if (this.getImage().getConfig().getBoolean("restart.enabled", false)) {
+                    this.getImage().launchInstance(true, this.getImage().getConfig().getBoolean("restart.forced", false));
+                }
             } catch (InterruptedException exception) {
                 // Getting a InterruptedException while running Process#waitFor means BungeeCord is going to shut down
                 // and the server has not terminated yet
