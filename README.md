@@ -36,7 +36,7 @@ If you wish to use BungeeScale's API in your plugin and if you are using maven f
 <dependency>
   <groupId>de.skeletoneye</groupId>
   <artifactId>bungeescale</artifactId>
-  <version>1.0.0</version>
+  <version>0.1.0</version>
   <scope>provided</scope>
 </dependency>
 ```
