@@ -3,8 +3,8 @@ version: 1
 
 # Command to be used when launching a new instance.
 # {driver} will be replaced by the location of the driver
-# {identifier} will be replaced by the unique id of the new instance
 # {port} will be replaced by the port the new instance will run on
+# {name} will be replaced by the unique name of the new instance
 launchCommand: 'java -jar {driver} --port {port}'
 
 # List of includes to be applied to all images.

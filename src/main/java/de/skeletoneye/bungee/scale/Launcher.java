@@ -70,7 +70,7 @@ public class Launcher implements Runnable
             // Prepare launch command
             String command = BungeeScale.getInstance().getNetworkConfig().getString("launchCommand");
             command = command.replaceAll("\\{driver\\}", "../../images/driver.jar");
-            command = command.replaceAll("\\{identifier\\}", this.getServer().getName());
+            command = command.replaceAll("\\{name\\}", this.getServer().getName());
             command = command.replaceAll("\\{port\\}", String.valueOf(this.getServer().getAddress().getPort()));
 
             // Add arguments given from ServerLaunchEvent
