@@ -1,5 +1,5 @@
-name: BungeeScale
-version: {version}
+name: ${project.name}
+version: ${project.version}
 author: SkeletonEye
 
 main: de.skeletoneye.bungee.scale.BungeeScale
