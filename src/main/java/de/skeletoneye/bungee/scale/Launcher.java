@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,13 +72,13 @@ public class Launcher implements Runnable
             command = command.replaceAll("\\{name\\}", this.getServer().getName());
             command = command.replaceAll("\\{port\\}", String.valueOf(this.getServer().getAddress().getPort()));
 
-            // Add arguments given from ServerLaunchEvent
-            List<String> input = new ArrayList<>();
-            input.addAll(Arrays.asList(command.split(" ")));
-            input.addAll(launchEvent.getArguments());
+            // Perform replacements (ServerLaunchEvent)
+            for (String key : launchEvent.getReplacements().keySet()) {
+                command = command.replaceAll("\\{" + key + "\\}", launchEvent.getReplacements().get(key));
+            }
 
             // Build and start process
-            ProcessBuilder builder = new ProcessBuilder(input.toArray(new String[] {}));
+            ProcessBuilder builder = new ProcessBuilder(Arrays.asList(command.split(" ")));
             builder.directory(runtimeDir.toFile());
             Process process = builder.start();
 

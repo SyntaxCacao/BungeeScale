@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 
+import de.skeletoneye.bungee.scale.event.ServerLaunchListener;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -102,6 +103,8 @@ public class BungeeScale extends Plugin
                     images.get(key).launchInstance(true);
                 }
             }
+            
+            this.getProxy().getPluginManager().registerListener(this, new ServerLaunchListener());
         } catch (Exception exception) {
             exception.printStackTrace();
         }
