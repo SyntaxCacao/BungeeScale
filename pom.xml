@@ -104,6 +104,48 @@
           <outputDirectory>test-server/plugins</outputDirectory>
         </configuration>
       </plugin>
+      <!-- maven-javadoc-plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.4</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <!-- Prevents failing builds because of uncompleted JavaDoc -->
+          <additionalparam>-Xdoclint:none</additionalparam>
+          <links>
+            <link>http://ci.md-5.net/job/BungeeCord/ws/api/target/apidocs/</link>
+          </links>
+          <!-- Use delomboked sources to also include generated methods into JavaDoc -->
+          <sourcepath>${basedir}/target/generated-sources/delombok</sourcepath>
+        </configuration>
+      </plugin>
+      <!-- lombok-maven-plugin -->
+      <plugin>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok-maven-plugin</artifactId>
+        <version>1.16.16.0</version>
+        <executions>
+          <execution>
+            <id>delombok</id>
+            <!-- To make it happen before JavaDoc generation -->
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>delombok</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
