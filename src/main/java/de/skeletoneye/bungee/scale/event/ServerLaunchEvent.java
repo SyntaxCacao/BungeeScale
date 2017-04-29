@@ -1,6 +1,8 @@
 package de.skeletoneye.bungee.scale.event;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.skeletoneye.bungee.scale.Image;
@@ -12,6 +14,7 @@ import net.md_5.bungee.api.plugin.Cancellable;
 @Getter
 public class ServerLaunchEvent extends ServerEvent implements Cancellable
 {
+    private List<String> includes = new ArrayList<>();
     private Map<String, String> replacements = new HashMap<>();
     private @Setter boolean cancelled = false;
     private Image image;
@@ -20,6 +23,16 @@ public class ServerLaunchEvent extends ServerEvent implements Cancellable
     {
         super(server);
         this.image = image;
+    }
+
+    /**
+     * Adds an include to be applied to only this instance.
+     * 
+     * @param name
+     */
+    public void addInclude(String name)
+    {
+        this.includes.add(name);
     }
 
     /**

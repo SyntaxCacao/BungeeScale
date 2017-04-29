@@ -66,6 +66,9 @@ public class Launcher implements Runnable
                 return;
             }
 
+            // Apply custom includes (ServerLaunchEvent)
+            this.applyIncludes(runtimeDir.toFile(), launchEvent.getIncludes());
+
             // Prepare launch command
             String command = BungeeScale.getInstance().getNetworkConfig().getString("launchCommand");
             command = command.replaceAll("\\{driver\\}", "../../images/driver.jar");
