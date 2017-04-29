@@ -11,12 +11,36 @@ import lombok.Setter;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Cancellable;
 
+/**
+ * Called when an instance is going to be launched.
+ * 
+ * @since 0.1.0
+ */
 @Getter
 public class ServerLaunchEvent extends ServerEvent implements Cancellable
 {
+    /**
+     * List of includes added using {@link #addInclude(String)}
+     * 
+     * @since 0.2.0
+     */
     private List<String> includes = new ArrayList<>();
+
+    /**
+     * Map of replacements added using {@link #replace(String, String)}
+     * 
+     * @since 0.2.0
+     */
     private Map<String, String> replacements = new HashMap<>();
+    
+    /**
+     * If set to <i>true</i>, the instance won't be launched.
+     */
     private @Setter boolean cancelled = false;
+    
+    /**
+     * This instance's image
+     */
     private Image image;
 
     public ServerLaunchEvent(ServerInfo server, Image image)
@@ -36,14 +60,13 @@ public class ServerLaunchEvent extends ServerEvent implements Cancellable
     }
 
     /**
-     * Performs the given replacement on the launch command.
-     * <code>varName = "test"</code> matches <code>{test}</code>
+     * Performs the given replacement on the launch command. <code>search = "test"</code> matches <code>{test}</code>
      * 
-     * @param varName the string to search for
-     * @param value its replacement
+     * @param search the string to search for
+     * @param replace its replacement
      */
-    public void replace(String varName, String value)
+    public void replace(String search, String replace)
     {
-        this.replacements.put(varName, value);
+        this.replacements.put(search, replace);
     }
 }

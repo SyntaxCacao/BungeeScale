@@ -16,6 +16,11 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
+/**
+ * Main plugin class.
+ * 
+ * @since 0.1.0
+ */
 @Getter
 public class BungeeScale extends Plugin
 {

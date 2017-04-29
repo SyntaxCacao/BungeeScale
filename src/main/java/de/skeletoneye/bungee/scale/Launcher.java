@@ -17,6 +17,11 @@ import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 
+/**
+ * {@link Runnable} to prepare the launching process, to actually start it and to wait until the instance terminates.
+ * 
+ * @since 0.1.0
+ */
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Getter
 public class Launcher implements Runnable
