@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
@@ -22,7 +23,7 @@ import net.md_5.bungee.config.Configuration;
  * 
  * @since 0.1.0
  */
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class Image
 {
